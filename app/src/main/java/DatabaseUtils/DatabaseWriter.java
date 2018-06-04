@@ -7,10 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
+import DAO.UserDao;
+
 import static DAO.UserDao.DESCRIPTION;
 import static DAO.UserDao.ID;
 import static DAO.UserDao.MAIL;
 import static DAO.UserDao.PASSWORD;
+import static DAO.UserDao.RFID;
 import static DAO.UserDao.PHONE_NUMBER;
 import static DAO.UserDao.USERNAME;
 import static DatabaseUtils.CommonUtils.DATABASE_NAME;
@@ -22,7 +25,7 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
     public DatabaseWriter(Context context) {
         super(context, DATABASE_NAME, null, 1);
         SQLiteDatabase db = this.getWritableDatabase();
-        onUpgrade(db, 0, 0);
+        //onUpgrade(db, 0, 0);
     }
 
     @Override
@@ -32,6 +35,7 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
                 USERNAME + " VARCHAR(255) NOT NULL," +
                 MAIL + " VARCHAR(255) NOT NULL," +
                 PASSWORD + " VARCHAR(255) NOT NULL," +
+                RFID + " VARCHAR(255) UNIQUE NOT NULL," +
                 DESCRIPTION + " VARCHAR(255)," +
                 PHONE_NUMBER + " INTEGER );");
     }
@@ -42,18 +46,29 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
         onCreate(db);
     }
 
-    public boolean insertUser(String name, String mail, String password){
+    public boolean insertUser(String name, String mail, String password, String rfid){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(USERNAME, name);
         contentValues.put(MAIL, mail);
         contentValues.put(PASSWORD, password);
+        contentValues.put(RFID, rfid);
         long result = db.insert(TABLE_NAME, null,contentValues);
         return result != -1;
     }
 
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("select * from "+TABLE_NAME,null);
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
+    }
+
+    public Cursor userExist(String rfid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT " + RFID + " FROM " + TABLE_NAME + " WHERE " + RFID + " = '" + rfid + "'",null);
+    }
+
+    public Integer deleteData(String rfid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, UserDao.RFID + " = '" + rfid + "'",null);
     }
 }
