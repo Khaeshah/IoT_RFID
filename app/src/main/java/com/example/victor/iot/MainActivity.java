@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
     Button scanBtn;
 
     private static final String UNI_URL = "http://192.168.2.152:3161/devices";
-    private static List<String> id = new ArrayList<>();
+    private static final String SIM_URL = "http://192.168.139.1:3161/devices";
+    private static String SCANNER_ID = "";
+    private static String INVENTORY_URL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println(id);
     }
 
     public void sendData(){
@@ -131,12 +131,38 @@ public class MainActivity extends AppCompatActivity {
             try{
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
-                URL url = new URL(UNI_URL);
+                URL url = new URL(SIM_URL);
                 InputStream inputStream = url.openStream();
                 Document document = db.parse(inputStream);
 
                 if (document != null){
-                    return document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                    String id = document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                    SCANNER_ID = id;
+                    INVENTORY_URL = SIM_URL + "/" + SCANNER_ID + "/inventory";
+                    return id;
+                }
+            }catch (Exception e){
+                System.out.println("ERROR: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    static class ScanInventoryTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            try{
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                URL url = new URL(INVENTORY_URL);
+                InputStream inputStream = url.openStream();
+                Document document = db.parse(inputStream);
+
+                if (document != null){
+                    String epc = document.getElementsByTagName("epc").item(0).getFirstChild().getNodeValue();
+                    return epc;
                 }
             }catch (Exception e){
                 System.out.println("ERROR: " + e.getMessage());
