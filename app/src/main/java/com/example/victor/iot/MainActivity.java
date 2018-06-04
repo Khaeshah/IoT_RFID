@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String UNI_URL = "http://192.168.2.152:3161/devices";
     private static final String SIM_URL = "http://192.168.139.1:3161/devices";
     private static String SCANNER_ID = "";
-    private static String INVENTORY_URL = "";
+    public static String INVENTORY_URL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         deleteRfid();
         try {
             ReadRFIDTask task = new ReadRFIDTask();
+            task.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            ScanInventoryTask task = new ScanInventoryTask();
             task.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,26 +156,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static class ScanInventoryTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
-
-            try{
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                URL url = new URL(INVENTORY_URL);
-                InputStream inputStream = url.openStream();
-                Document document = db.parse(inputStream);
-
-                if (document != null){
-                    String epc = document.getElementsByTagName("epc").item(0).getFirstChild().getNodeValue();
-                    return epc;
-                }
-            }catch (Exception e){
-                System.out.println("ERROR: " + e.getMessage());
-            }
-            return null;
-        }
-    }
 }
