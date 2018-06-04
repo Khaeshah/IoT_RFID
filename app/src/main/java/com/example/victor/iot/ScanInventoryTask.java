@@ -35,8 +35,8 @@ class ScheduledTask extends TimerTask {
                 for(int i = 0; i < elements.getLength(); ++i) {
                     epcList.add(elements.item(i).getFirstChild().getNodeValue());
                 }
-                //String epc = elements.item(0).getFirstChild().getNodeValue();
-                System.out.println(epcList);
+                MainActivity.setMainActivityValue(epcList);
+
             }
         }catch (Exception e){
             System.out.println("ERROR: " + e.getMessage());

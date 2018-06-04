@@ -11,9 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,12 +41,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String SIM_URL = "http://192.168.139.1:3161/devices";
     private static String SCANNER_ID = "";
     public static String INVENTORY_URL = "";
+    public static List <String> SCANNED_RFID_LIST;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myDb = new DatabaseWriter(this);
+
+        SCANNED_RFID_LIST = new ArrayList<>();
 
         editName = findViewById(R.id.editText_name);
         editMail = findViewById(R.id.editText5_mail);
@@ -59,12 +67,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             ReadRFIDTask task = new ReadRFIDTask();
             task.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            ScanInventoryTask task = new ScanInventoryTask();
-            task.execute();
+            ScanInventoryTask scanTask = new ScanInventoryTask();
+            scanTask.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    public static void setMainActivityValue(List<String> sl) {
+        SCANNED_RFID_LIST.clear();
+        SCANNED_RFID_LIST.addAll(sl);
     }
 
 }
