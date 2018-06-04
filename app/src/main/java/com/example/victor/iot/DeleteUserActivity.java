@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import DatabaseUtils.DatabaseWriter;
 
@@ -15,7 +16,8 @@ public class DeleteUserActivity extends AppCompatActivity {
     static DatabaseWriter myDb;
     EditText rfidToDelete;
     public static List <String> SCANNED_RFID_LIST;
-
+    static Timer time = new Timer(); // Instantiate Timer Object
+    static boolean isTimeRunning = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +25,7 @@ public class DeleteUserActivity extends AppCompatActivity {
         myDb = new DatabaseWriter(this);
         // rfidToDelete = findViewById(R.id.labTextDelete);
         SCANNED_RFID_LIST = new ArrayList<>();
+
         try {
             /*MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
             task.execute();*/
@@ -33,6 +36,23 @@ public class DeleteUserActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    protected void onPause() {
+        super.onPause();
+        time.cancel();
+        time.purge();
+        isTimeRunning = false;
+        System.out.println("HE PAUSAT EL DELETE");
+    }
+
+    protected void onResume() {
+        super.onResume();
+        time = new Timer();
+        isTimeRunning = true;
+        System.out.println("HE RESUMIT EL DELETE");
+    }
+
+
 
     public static void deleteRfids(List<String> rfids) {
         try {

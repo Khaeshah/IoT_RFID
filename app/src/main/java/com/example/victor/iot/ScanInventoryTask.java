@@ -48,9 +48,12 @@ class ScheduledTask extends TimerTask {
 public class ScanInventoryTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            Timer time = new Timer(); // Instantiate Timer Object
+
             ScheduledTask st = new ScheduledTask(); // Instantiate SheduledTask class
-            time.schedule(st, 0, 3000); // Create Repetitively task for every 1 secs
+            if(DeleteUserActivity.isTimeRunning) {
+                DeleteUserActivity.time.schedule(st, 0, 3000); // Create Repetitively task for every 1 secs
+            }
+
 
         return null;
     }
