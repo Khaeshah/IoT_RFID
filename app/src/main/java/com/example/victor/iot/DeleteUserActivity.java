@@ -12,7 +12,7 @@ import DatabaseUtils.DatabaseWriter;
 
 public class DeleteUserActivity extends AppCompatActivity {
 
-    DatabaseWriter myDb;
+    static DatabaseWriter myDb;
     EditText rfidToDelete;
     public static List <String> SCANNED_RFID_LIST;
 
@@ -21,28 +21,40 @@ public class DeleteUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_user);
         myDb = new DatabaseWriter(this);
-        rfidToDelete = findViewById(R.id.labTextDelete);
-        checkDeleteListener(SCANNED_RFID_LIST);
+        // rfidToDelete = findViewById(R.id.labTextDelete);
         SCANNED_RFID_LIST = new ArrayList<>();
         try {
             /*MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
             task.execute();*/
             ScanInventoryTask scanTask = new ScanInventoryTask();
             scanTask.execute();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void checkDeleteListener(List<String> rfids) {
-        Boolean rfidIsDeleted = false;
+    public static void deleteRfids(List<String> rfids) {
+        try {
+            for (String rfid : rfids) {
+                if(myDb.userExist(rfid).moveToNext()) {
+                    Integer deletedRows = myDb.deleteData(rfid);
+                    if (deletedRows > 0) {
+                        //Toast.makeText(.this,"RFID Deleted: " + rfid, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(DeleteUserActivity.this, "RFID Deleted: " + rfid, Toast.LENGTH_LONG).show();
+                        System.out.println("SA BORRAT " + rfid);
+                    }
+                    else {
+                        System.out.println("NO SA BORRAO RES");
+                        //Toast.makeText(DeleteUserActivity.this, "NO DELETED", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        /*for (String rfid : rfids){
-            //Delete
-        }*/
-
-
-        System.out.println(SCANNED_RFID_LIST);
+        //System.out.println(SCANNED_RFID_LIST);
 
         // DELETE WORKING NO BORRAR
         /*while (!rfidIsDeleted) {

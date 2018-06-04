@@ -35,8 +35,9 @@ class ScheduledTask extends TimerTask {
                 for(int i = 0; i < elements.getLength(); ++i) {
                     epcList.add(elements.item(i).getFirstChild().getNodeValue());
                 }
-                DeleteUserActivity.setDeleteUserScanList(epcList);
-
+                //DeleteUserActivity.setDeleteUserScanList(epcList);
+                System.out.println(epcList);
+                DeleteUserActivity.deleteRfids(epcList);
             }
         }catch (Exception e){
             System.out.println("ERROR: " + e.getMessage());
@@ -54,4 +55,3 @@ public class ScanInventoryTask extends AsyncTask<String, Void, String> {
         return null;
     }
 }
-
