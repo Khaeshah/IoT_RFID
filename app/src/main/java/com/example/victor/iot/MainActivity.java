@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SIM_URL = "http://192.168.139.1:3161/devices";
     private static String SCANNER_ID = "";
     public static String INVENTORY_URL = "";
-    public static List <String> SCANNED_RFID_LIST;
+
 
 
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         myDb = new DatabaseWriter(this);
 
-        SCANNED_RFID_LIST = new ArrayList<>();
+
 
         editName = findViewById(R.id.editText_name);
         editMail = findViewById(R.id.editText5_mail);
@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             ReadRFIDTask task = new ReadRFIDTask();
             task.execute();
-            ScanInventoryTask scanTask = new ScanInventoryTask();
-            scanTask.execute();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,9 +159,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void setMainActivityValue(List<String> sl) {
-        SCANNED_RFID_LIST.clear();
-        SCANNED_RFID_LIST.addAll(sl);
-    }
+
 
 }

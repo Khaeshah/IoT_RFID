@@ -5,16 +5,16 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import DatabaseUtils.DatabaseWriter;
-
-import static com.example.victor.iot.MainActivity.SCANNED_RFID_LIST;
 
 public class DeleteUserActivity extends AppCompatActivity {
 
     DatabaseWriter myDb;
     EditText rfidToDelete;
+    public static List <String> SCANNED_RFID_LIST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +23,12 @@ public class DeleteUserActivity extends AppCompatActivity {
         myDb = new DatabaseWriter(this);
         rfidToDelete = findViewById(R.id.labTextDelete);
         checkDeleteListener(SCANNED_RFID_LIST);
-
+        SCANNED_RFID_LIST = new ArrayList<>();
         try {
-            MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
-            task.execute();
+            /*MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
+            task.execute();*/
+            ScanInventoryTask scanTask = new ScanInventoryTask();
+            scanTask.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,9 +37,9 @@ public class DeleteUserActivity extends AppCompatActivity {
     public void checkDeleteListener(List<String> rfids) {
         Boolean rfidIsDeleted = false;
 
-        for (String rfid : rfids){
+        /*for (String rfid : rfids){
             //Delete
-        }
+        }*/
 
 
         System.out.println(SCANNED_RFID_LIST);
@@ -54,5 +56,10 @@ public class DeleteUserActivity extends AppCompatActivity {
                 }
             }
         }*/
+    }
+    public static void setDeleteUserScanList(List<String> sl) {
+        SCANNED_RFID_LIST.clear();
+        SCANNED_RFID_LIST.addAll(sl);
+        System.out.println(SCANNED_RFID_LIST);
     }
 }

@@ -35,7 +35,7 @@ class ScheduledTask extends TimerTask {
                 for(int i = 0; i < elements.getLength(); ++i) {
                     epcList.add(elements.item(i).getFirstChild().getNodeValue());
                 }
-                MainActivity.setMainActivityValue(epcList);
+                DeleteUserActivity.setDeleteUserScanList(epcList);
 
             }
         }catch (Exception e){
