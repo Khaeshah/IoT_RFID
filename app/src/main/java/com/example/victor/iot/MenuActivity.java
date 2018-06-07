@@ -12,11 +12,6 @@ import DatabaseUtils.DatabaseWriter;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private static final String UNI_URL = "http://192.168.2.152:3161/devices";
-    private static final String SIM_URL = "http://192.168.139.1:3161/devices";
-    private static String SCANNER_ID = "";
-    public static String INVENTORY_URL = "";
-
     DatabaseWriter myDb;
     Button createUserBtn;
     Button deleteUserBtn;
@@ -36,6 +31,7 @@ public class MenuActivity extends AppCompatActivity {
         createUser();
         checkData();
         deleteRfid();
+        scanUser();
     }
 
     public void createUser(){
@@ -78,6 +74,17 @@ public class MenuActivity extends AppCompatActivity {
                             buffer.append("RFID :").append(res.getString(4)).append("\n\n");
                         }
                         showMessage("Data",buffer.toString());
+                    }
+                }
+        );
+    }
+
+    public void scanUser() {
+        scanUserBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MenuActivity.this, ScanUserActivity.class));
                     }
                 }
         );

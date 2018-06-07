@@ -71,4 +71,9 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, UserDao.RFID + " = '" + rfid + "'",null);
     }
+
+    public Cursor getUser(String rfid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT " + DESCRIPTION + " FROM " + TABLE_NAME + " WHERE " + RFID + " = '" + rfid + "'",null);
+    }
 }

@@ -17,7 +17,8 @@ import java.util.TimerTask;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static com.example.victor.iot.MenuActivity.INVENTORY_URL;
+import static com.example.victor.iot.ScanUserActivity.INVENTORY_URL;
+
 
 class ScheduledTask extends TimerTask {
 

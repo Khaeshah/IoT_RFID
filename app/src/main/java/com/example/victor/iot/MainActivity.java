@@ -19,9 +19,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import DatabaseUtils.DatabaseWriter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity {
+/*
 
-    /*DatabaseWriter myDb;
+    DatabaseWriter myDb;
     EditText editName;
     EditText editMail;
     EditText editPassword;
@@ -147,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-    }*/
+    }
+*/
 
 
 

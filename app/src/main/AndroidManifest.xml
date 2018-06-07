@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".CreateUserActivity"></activity>
         <activity android:name=".DeleteUserActivity"></activity>
+        <activity android:name=".ScanUserActivity" />
     </application>
 
 </manifest>
