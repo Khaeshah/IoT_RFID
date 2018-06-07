@@ -1,7 +1,10 @@
 package com.example.victor.iot;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,10 +17,13 @@ import DatabaseUtils.DatabaseWriter;
 public class DeleteUserActivity extends AppCompatActivity {
 
     static DatabaseWriter myDb;
-    EditText rfidToDelete;
     public static List <String> SCANNED_RFID_LIST;
     static Timer time = new Timer(); // Instantiate Timer Object
     static boolean isTimeRunning = true;
+    Button deleteBtn;
+    Button backBtn;
+    EditText editRfid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +31,11 @@ public class DeleteUserActivity extends AppCompatActivity {
         myDb = new DatabaseWriter(this);
         // rfidToDelete = findViewById(R.id.labTextDelete);
         SCANNED_RFID_LIST = new ArrayList<>();
+        deleteBtn = findViewById(R.id.button6);
+        backBtn = findViewById(R.id.button7);
+        editRfid = findViewById(R.id.editText5_rfid2);
+        deleteSingleUser();
+        goBack();
 
         try {
             /*MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
@@ -54,21 +65,10 @@ public class DeleteUserActivity extends AppCompatActivity {
 
 
 
-    public static void deleteRfids(List<String> rfids) {
+    public void deleteRfids(List<String> rfids) {
         try {
             for (String rfid : rfids) {
-                if(myDb.userExist(rfid).moveToNext()) {
-                    Integer deletedRows = myDb.deleteData(rfid);
-                    if (deletedRows > 0) {
-                        //Toast.makeText(.this,"RFID Deleted: " + rfid, Toast.LENGTH_LONG).show();
-                        //Toast.makeText(DeleteUserActivity.this, "RFID Deleted: " + rfid, Toast.LENGTH_LONG).show();
-                        System.out.println("SA BORRAT " + rfid);
-                    }
-                    else {
-                        System.out.println("NO SA BORRAO RES");
-                        //Toast.makeText(DeleteUserActivity.this, "NO DELETED", Toast.LENGTH_LONG).show();
-                    }
-                }
+                deleteSingleUser();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,5 +93,37 @@ public class DeleteUserActivity extends AppCompatActivity {
         SCANNED_RFID_LIST.clear();
         SCANNED_RFID_LIST.addAll(sl);
         System.out.println(SCANNED_RFID_LIST);
+    }
+
+    public void deleteSingleUser(){
+
+        deleteBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String finalRfidToDelete = editRfid.getText().toString();
+
+                        if(myDb.userExist(finalRfidToDelete).moveToNext()) {
+                            Integer deletedRows = myDb.deleteData(finalRfidToDelete);
+                            if (deletedRows > 0) {
+                                Toast.makeText(DeleteUserActivity.this, "Deleted!", Toast.LENGTH_LONG).show();
+                            }
+                        }else {
+                            Toast.makeText(DeleteUserActivity.this, "User not found!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        );
+    }
+
+    public void goBack(){
+        backBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(DeleteUserActivity.this, MenuActivity.class));
+                    }
+                }
+        );
     }
 }

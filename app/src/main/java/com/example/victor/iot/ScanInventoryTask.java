@@ -17,7 +17,7 @@ import java.util.TimerTask;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static com.example.victor.iot.MainActivity.INVENTORY_URL;
+import static com.example.victor.iot.MenuActivity.INVENTORY_URL;
 
 class ScheduledTask extends TimerTask {
 
@@ -37,7 +37,7 @@ class ScheduledTask extends TimerTask {
                 }
                 //DeleteUserActivity.setDeleteUserScanList(epcList);
                 System.out.println(epcList);
-                DeleteUserActivity.deleteRfids(epcList);
+                //DeleteUserActivity.deleteRfids(epcList);
             }
         }catch (Exception e){
             System.out.println("ERROR: " + e.getMessage());

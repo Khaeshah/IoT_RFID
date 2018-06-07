@@ -11,15 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +21,7 @@ import DatabaseUtils.DatabaseWriter;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseWriter myDb;
+    /*DatabaseWriter myDb;
     EditText editName;
     EditText editMail;
     EditText editPassword;
@@ -43,15 +37,11 @@ public class MainActivity extends AppCompatActivity {
     public static String INVENTORY_URL = "";
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myDb = new DatabaseWriter(this);
-
-
 
         editName = findViewById(R.id.editText_name);
         editMail = findViewById(R.id.editText5_mail);
@@ -157,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
+    }*/
 
 
 
