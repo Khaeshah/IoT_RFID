@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
+import org.json.JSONObject;
+
 import DAO.UserDao;
 
 import static DAO.UserDao.DESCRIPTION;
@@ -57,6 +59,16 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
         return result != -1;
     }
 
+    public boolean updateUser(String name, String mail, String password, String rfid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USERNAME, name);
+        contentValues.put(MAIL, mail);
+        contentValues.put(PASSWORD, password);
+        long result = db.update(TABLE_NAME, contentValues, RFID + " = " + rfid, null);
+        return result != -1;
+    }
+
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
@@ -70,5 +82,18 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
     public Integer deleteData(String rfid) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, UserDao.RFID + " = '" + rfid + "'",null);
+    }
+
+    public Cursor getUser(String rfid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT " + DESCRIPTION + " FROM " + TABLE_NAME + " WHERE " + RFID + " = '" + rfid + "'",null);
+    }
+
+    public boolean insertHistory(String rfid, JSONObject history){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DESCRIPTION, history.toString());
+        long result = db.update(TABLE_NAME, contentValues, rfid, null);
+        return result != -1;
     }
 }
