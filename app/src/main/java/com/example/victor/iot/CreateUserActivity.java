@@ -37,8 +37,6 @@ public class CreateUserActivity extends AppCompatActivity {
         goBack();
     }
 
-
-
     public void sendData(){
         sendBtn.setOnClickListener(
                 new View.OnClickListener() {
