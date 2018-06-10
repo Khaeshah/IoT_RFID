@@ -38,10 +38,10 @@ public class DeleteUserActivity extends AppCompatActivity {
         goBack();
 
         try {
-            /*MainActivity.ReadRFIDTask task = new MainActivity.ReadRFIDTask();
-            task.execute();*/
-            ScanInventoryTask scanTask = new ScanInventoryTask();
-            scanTask.execute();
+            ScanUserActivity.FirstTask task = new ScanUserActivity.FirstTask();
+            task.execute();
+            //ScanInventoryTask scanTask = new ScanInventoryTask();
+            //scanTask.execute();
 
         } catch (Exception e) {
             e.printStackTrace();
