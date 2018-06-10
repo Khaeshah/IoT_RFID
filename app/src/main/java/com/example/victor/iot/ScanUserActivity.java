@@ -1,16 +1,20 @@
 package com.example.victor.iot;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import junit.framework.Assert;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,8 +50,9 @@ public class ScanUserActivity extends AppCompatActivity {
     Button backBtn;
     EditText editRfid;
     Context context = this;
-    CheckConnection task;
     ScheduledRfidScannerTask st;
+    Timer time = new Timer();
+    Integer timeOut = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +66,6 @@ public class ScanUserActivity extends AppCompatActivity {
         scanUser();
         goBack();
         try {
-            task = new CheckConnection();
-            task.execute();
-            Thread.sleep(1000);
-            Timer time = new Timer();
             st = new ScheduledRfidScannerTask();
             time.schedule(st, 0, 8000);
         } catch (Exception e) {
@@ -78,7 +79,6 @@ public class ScanUserActivity extends AppCompatActivity {
             Cursor scanRows = myDb.getUser(rfid);
 
             if(scanRows.getCount() == 0) {
-                // show message
                 showMessage("Error","Nothing found", context);
                 return;
             }
@@ -93,7 +93,7 @@ public class ScanUserActivity extends AppCompatActivity {
                         buffer.append("Entry Date:").append(history.get("entryDate")).append("\n");
                         buffer.append("Discharge Date:").append(history.get("dischargeDate")).append("\n");
                     }else{
-                        showMessage("WARNING","History is empty", context);
+                        showMessage("WARNING", rfid + ".\nHistory is empty.", context);
                         return;
                     }
                 } catch (JSONException e) {
@@ -103,7 +103,7 @@ public class ScanUserActivity extends AppCompatActivity {
             }
             showMessage("History",buffer.toString(), context);
         }else {
-            Toast.makeText(ScanUserActivity.this, "User not found!", Toast.LENGTH_LONG).show();
+            Toast.makeText(ScanUserActivity.this, rfid + "\nUser not found.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -124,60 +124,53 @@ public class ScanUserActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        task.cancel(true);
-                        st.cancel();
+                        if(st != null){
+                            st.cancel();
+                        }
                         startActivity(new Intent(ScanUserActivity.this, MenuActivity.class));
                     }
                 }
         );
     }
 
-    static class CheckConnection extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
-
-            try{
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                URL url = new URL(HOUSE_URL);
-                InputStream inputStream = url.openStream();
-                Document document = db.parse(inputStream);
-
-                if (document != null){
-                    String id = document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
-                    SCANNER_ID = id;
-                    INVENTORY_URL = HOUSE_URL + "/" + SCANNER_ID + "/inventory";
-                    return id;
-                }
-            }catch (Exception e){
-                System.out.println("ERROR: " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
     class ScheduledRfidScannerTask extends TimerTask {
 
-        ScheduledRfidScannerTask1 test;
+        ScannerTask task;
 
-        final class ScheduledRfidScannerTask1 extends AsyncTask<String, Void, String>{
+        @SuppressLint("StaticFieldLeak")
+        private final class ScannerTask extends AsyncTask<String, Void, String>{
 
             List<String> rfidList = new ArrayList<>();
-
             @Override
             protected String doInBackground(String... strings) {
                 try{
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
-                    URL url = new URL(INVENTORY_URL);
+                    URL url = new URL(HOUSE_URL);
                     InputStream inputStream = url.openStream();
                     Document document = db.parse(inputStream);
 
+                    if (document != null){
+                        SCANNER_ID = document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                        INVENTORY_URL = HOUSE_URL + "/" + SCANNER_ID + "/inventory";
+                    }
+
+                    url = new URL(INVENTORY_URL);
+                    inputStream = url.openStream();
+                    document = db.parse(inputStream);
+
                     NodeList elements = document.getElementsByTagName("epc");
                     if (elements != null) {
-                        for(int i = 0; i < elements.getLength(); ++i) {
-                            rfidList.add(elements.item(i).getFirstChild().getNodeValue());
+                        if (elements.getLength() > 0){
+                            timeOut = 0;
+                            for(int i = 0; i < elements.getLength(); ++i) {
+                                rfidList.add(elements.item(i).getFirstChild().getNodeValue());
+                            }
+                        }else{
+                            if(timeOut > 2){
+                                task.cancel(true);
+                            }
+                            timeOut++;
                         }
                     }
 
@@ -187,8 +180,16 @@ public class ScanUserActivity extends AppCompatActivity {
                     return null;
                 }catch (Exception e){
                     System.out.println("ERROR: " + e.getMessage());
+                    task.cancel(true);
                 }
                 return rfidList.toString();
+            }
+
+            @Override
+            protected void onCancelled(String s) {
+                time.cancel();
+                time.purge();
+                Toast.makeText(ScanUserActivity.this, "Network Error. Please enter RFID manually", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -203,8 +204,8 @@ public class ScanUserActivity extends AppCompatActivity {
         }
 
         public void run() {
-            test = new ScheduledRfidScannerTask1();
-            test.execute();
+            task = new ScannerTask();
+            task.execute();
         }
     }
 }
