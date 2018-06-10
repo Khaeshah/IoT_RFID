@@ -20,6 +20,8 @@
         <activity android:name=".CreateUserActivity"></activity>
         <activity android:name=".DeleteUserActivity"></activity>
         <activity android:name=".ScanUserActivity" />
+        <activity android:name=".DescriptionActivity" />
+        <activity android:name=".ActivityUtils" />
     </application>
 
 </manifest>

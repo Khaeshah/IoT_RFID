@@ -53,14 +53,12 @@ public class DeleteUserActivity extends AppCompatActivity {
         time.cancel();
         time.purge();
         isTimeRunning = false;
-        System.out.println("HE PAUSAT EL DELETE");
     }
 
     protected void onResume() {
         super.onResume();
         time = new Timer();
         isTimeRunning = true;
-        System.out.println("HE RESUMIT EL DELETE");
     }
 
 

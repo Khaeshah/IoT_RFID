@@ -1,6 +1,7 @@
 package com.example.victor.iot;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -20,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import DatabaseUtils.DatabaseWriter;
+import static com.example.victor.iot.ActivityUtils.showMessage;
 
 public class ScanUserActivity extends AppCompatActivity {
 
@@ -32,6 +36,7 @@ public class ScanUserActivity extends AppCompatActivity {
     Button scanBtn;
     Button backBtn;
     EditText editRfid;
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,32 @@ public class ScanUserActivity extends AppCompatActivity {
 
                         if(myDb.userExist(finalRfidToScan).moveToNext()) {
                             Cursor scanRows = myDb.getUser(finalRfidToScan);
-                            //TODO: tractar això
+
+                            if(scanRows.getCount() == 0) {
+                                // show message
+                                showMessage("Error","Nothing found", context);
+                                return;
+                            }
+                            StringBuilder buffer = new StringBuilder();
+                            while (scanRows.moveToNext()) {
+                                try {
+                                    if (scanRows.getString(0) != null){
+                                        JSONObject history = new JSONObject(scanRows.getString(0));
+                                        buffer.append("Blood Grouping:").append(history.get("bloodGroup")).append("\n");
+                                        buffer.append("User Status:").append(history.get("userStatus")).append("\n");
+                                        buffer.append("Allergies:").append(history.get("allergies")).append("\n");
+                                        buffer.append("Entry Date:").append(history.get("entryDate")).append("\n");
+                                        buffer.append("Discharge Date:").append(history.get("dischargeDate")).append("\n");
+                                    }else{
+                                        showMessage("WARNING","History is empty", context);
+                                        return;
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            showMessage("History",buffer.toString(), context);
                         }else {
                             Toast.makeText(ScanUserActivity.this, "User not found!", Toast.LENGTH_LONG).show();
                         }
