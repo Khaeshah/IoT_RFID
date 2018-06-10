@@ -36,7 +36,7 @@ public class ScanUserActivity extends AppCompatActivity {
 
     private static final String UNI_URL = "http://192.168.2.152:3161/devices";
     private static final String SIM_URL = "http://192.168.139.1:3161/devices";
-    private static final String HOUSE_URL = "http://192.168.1.35:3161/devices";
+    public static final String HOUSE_URL = "http://192.168.1.35:3161/devices";
 
     private static String SCANNER_ID = "";
     public static String INVENTORY_URL = "";
@@ -66,7 +66,7 @@ public class ScanUserActivity extends AppCompatActivity {
             Thread.sleep(1000);
             Timer time = new Timer();
             st = new ScheduledRfidScannerTask();
-            time.schedule(st, 0, 5000);
+            time.schedule(st, 0, 8000);
         } catch (Exception e) {
             showMessage("Error", e.getMessage(), context);
         }
@@ -196,7 +196,7 @@ public class ScanUserActivity extends AppCompatActivity {
                 if(response != null){
                     String[] rfids = response.replace("[","").replace("]","").split(",");
                     for(String rfid : rfids){
-                        scanSingleRfid(rfid.trim());
+                        scanSingleRfid(rfid);
                     }
                 }
             }
