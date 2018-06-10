@@ -20,6 +20,8 @@ import org.w3c.dom.NodeList;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,8 +46,8 @@ public class ScanUserActivity extends AppCompatActivity {
     Button backBtn;
     EditText editRfid;
     Context context = this;
-    FirstTask task;
-    SecondTask st;
+    CheckConnection task;
+    ScheduledRfidScannerTask st;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,11 @@ public class ScanUserActivity extends AppCompatActivity {
         scanUser();
         goBack();
         try {
-            task = new FirstTask();
+            task = new CheckConnection();
             task.execute();
             Thread.sleep(1000);
             Timer time = new Timer();
-            st = new SecondTask();
+            st = new ScheduledRfidScannerTask();
             time.schedule(st, 0, 5000);
         } catch (Exception e) {
             showMessage("Error", e.getMessage(), context);
@@ -130,7 +132,7 @@ public class ScanUserActivity extends AppCompatActivity {
         );
     }
 
-    static class FirstTask extends AsyncTask<String, Void, String> {
+    static class CheckConnection extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
@@ -155,33 +157,54 @@ public class ScanUserActivity extends AppCompatActivity {
         }
     }
 
-    class SecondTask extends TimerTask {
+    class ScheduledRfidScannerTask extends TimerTask {
+
+        ScheduledRfidScannerTask1 test;
+
+        final class ScheduledRfidScannerTask1 extends AsyncTask<String, Void, String>{
+
+            List<String> rfidList = new ArrayList<>();
+
+            @Override
+            protected String doInBackground(String... strings) {
+                try{
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    URL url = new URL(INVENTORY_URL);
+                    InputStream inputStream = url.openStream();
+                    Document document = db.parse(inputStream);
+
+                    NodeList elements = document.getElementsByTagName("epc");
+                    if (elements != null) {
+                        for(int i = 0; i < elements.getLength(); ++i) {
+                            rfidList.add(elements.item(i).getFirstChild().getNodeValue());
+                        }
+                    }
+
+                    if(!rfidList.isEmpty()){
+                        return rfidList.toString();
+                    }
+                    return null;
+                }catch (Exception e){
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+                return rfidList.toString();
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                if(response != null){
+                    String[] rfids = response.replace("[","").replace("]","").split(",");
+                    for(String rfid : rfids){
+                        scanSingleRfid(rfid.trim());
+                    }
+                }
+            }
+        }
 
         public void run() {
-
-            try{
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                URL url = new URL(INVENTORY_URL);
-                InputStream inputStream = url.openStream();
-                Document document = db.parse(inputStream);
-
-                List<String> rfidList = new ArrayList<>();
-                NodeList elements = document.getElementsByTagName("epc");
-                if (elements != null) {
-                    for(int i = 0; i < elements.getLength(); ++i) {
-                        rfidList.add(elements.item(i).getFirstChild().getNodeValue());
-                    }
-                }
-
-                if(!rfidList.isEmpty()){
-                    for(String rfid : rfidList){
-                        scanSingleRfid(rfid);
-                    }
-                }
-            }catch (Exception e){
-                System.out.println("ERROR: " + e.getMessage());
-            }
+            test = new ScheduledRfidScannerTask1();
+            test.execute();
         }
     }
 }

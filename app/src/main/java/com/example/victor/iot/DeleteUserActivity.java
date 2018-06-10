@@ -38,8 +38,8 @@ public class DeleteUserActivity extends AppCompatActivity {
         goBack();
 
         try {
-            ScanUserActivity.FirstTask task = new ScanUserActivity.FirstTask();
-            task.execute();
+            //ScanUserActivity.CheckConnection task = new ScanUserActivity.CheckConnection();
+            //task.execute();
             //ScanInventoryTask scanTask = new ScanInventoryTask();
             //scanTask.execute();
 
