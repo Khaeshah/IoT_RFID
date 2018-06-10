@@ -38,15 +38,15 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Welcome to our Application"
+        android:text="Welcome to MediClinic Solutions"
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
         android:textColor="@android:color/background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintVertical_bias="0.059" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -84,10 +84,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.912"
+        app:layout_constraintVertical_bias="0.879"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -114,10 +114,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintHorizontal_bias="0.215"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.758"
+        app:layout_constraintVertical_bias="0.727"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -144,10 +144,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.791"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.751"
+        app:layout_constraintVertical_bias="0.727"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -174,10 +174,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.799"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.595"
+        app:layout_constraintVertical_bias="0.57"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -204,10 +204,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircleRadius="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.215"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.592"
+        app:layout_constraintVertical_bias="0.572"
         tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>
