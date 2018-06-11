@@ -38,9 +38,9 @@ import static com.example.victor.iot.ActivityUtils.showMessage;
 
 public class ScanUserActivity extends AppCompatActivity {
 
-    private static final String UNI_URL = "http://192.168.2.152:3161/devices";
+    public static final String UNI_URL = "http://192.168.2.152:3161/devices";
     private static final String SIM_URL = "http://192.168.139.1:3161/devices";
-    public static final String HOUSE_URL = "http://192.168.1.35:3161/devices";
+    //public static final String HOUSE_URL = "http://192.168.1.35:3161/devices";
 
     private static String SCANNER_ID = "";
     public static String INVENTORY_URL = "";
@@ -75,6 +75,7 @@ public class ScanUserActivity extends AppCompatActivity {
 
     public void scanSingleRfid(String rfid){
 
+        rfid = rfid.trim();
         if(myDb.userExist(rfid).moveToNext()) {
             Cursor scanRows = myDb.getUser(rfid);
 
@@ -113,7 +114,7 @@ public class ScanUserActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         final String finalRfidToScan = editRfid.getText().toString();
-                        scanSingleRfid(finalRfidToScan);
+                        scanSingleRfid(finalRfidToScan.trim());
                     }
                 }
         );
@@ -146,13 +147,13 @@ public class ScanUserActivity extends AppCompatActivity {
                 try{
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
-                    URL url = new URL(HOUSE_URL);
+                    URL url = new URL(UNI_URL);
                     InputStream inputStream = url.openStream();
                     Document document = db.parse(inputStream);
 
                     if (document != null){
                         SCANNER_ID = document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
-                        INVENTORY_URL = HOUSE_URL + "/" + SCANNER_ID + "/inventory";
+                        INVENTORY_URL = UNI_URL + "/" + SCANNER_ID + "/inventory";
                     }
 
                     url = new URL(INVENTORY_URL);

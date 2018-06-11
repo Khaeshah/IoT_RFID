@@ -27,8 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import DatabaseUtils.DatabaseWriter;
 
 import static com.example.victor.iot.ActivityUtils.showMessage;
-import static com.example.victor.iot.ScanUserActivity.HOUSE_URL;
-import static com.example.victor.iot.ScanUserActivity.INVENTORY_URL;
+import static com.example.victor.iot.ScanUserActivity.UNI_URL;
 
 public class DeleteUserActivity extends AppCompatActivity {
 
@@ -64,6 +63,7 @@ public class DeleteUserActivity extends AppCompatActivity {
     }
 
     public void deleteSingleUser(String finalRfidToDelete){
+        finalRfidToDelete = finalRfidToDelete.trim();
         if(myDb.userExist(finalRfidToDelete).moveToNext()) {
             Integer deletedRows = myDb.deleteData(finalRfidToDelete);
             if (deletedRows > 0) {
@@ -80,7 +80,7 @@ public class DeleteUserActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         final String finalRfidToDelete = editRfid.getText().toString();
-                        deleteSingleUser(finalRfidToDelete);
+                        deleteSingleUser(finalRfidToDelete.trim());
                     }
                 }
         );
@@ -115,13 +115,13 @@ public class DeleteUserActivity extends AppCompatActivity {
 
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
-                    URL url = new URL(HOUSE_URL);
+                    URL url = new URL(UNI_URL);
                     InputStream inputStream = url.openStream();
                     Document document = db.parse(inputStream);
 
                     if (document != null){
                         SCANNER_ID = document.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
-                        INVENTORY_URL = HOUSE_URL + "/" + SCANNER_ID + "/inventory";
+                        INVENTORY_URL = UNI_URL + "/" + SCANNER_ID + "/inventory";
                     }
 
                     url = new URL(INVENTORY_URL);

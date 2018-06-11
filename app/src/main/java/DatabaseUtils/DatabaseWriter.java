@@ -93,7 +93,7 @@ public class DatabaseWriter extends SQLiteOpenHelper implements BaseColumns{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DESCRIPTION, history.toString());
-        long result = db.update(TABLE_NAME, contentValues, rfid, null);
+        long result = db.update(TABLE_NAME, contentValues, RFID + " = '" + rfid + "'", null);
         return result != -1;
     }
 }
